@@ -1,52 +1,53 @@
-
-#!/usr/bin/env/python
-#Importando blibiotecas
+#!/usr/bin/env python
 import socket
-import subsubprocess
+import subprocess
 import sys
 from datetime import datetime
 
-#Limpando a tela
+# Clear the screen
 subprocess.call('clear', shell=True)
 
-#Recendo valore
-remoteServer = raw_input("Digite o host para scan: ")
-remoteServerIP = socket.gethostbyname(remoteServer)
+# Ask for input
+remoteServer    = raw_input("Enter a remote host to scan: ")
+remoteServerIP  = socket.gethostbyname(remoteServer)
 
-#Banner de scan
+# Print a nice banner with information on which host we are about to scan
 print "-" * 60
-print "Aguarde! Escaneado o host", rremoteServerIP
+print "Please wait, scanning remote host", remoteServerIP
 print "-" * 60
 
-#Hora que iniciou o scan
+# Check what time the scan started
 t1 = datetime.now()
 
-#Usando o range espeficio de portas(entre 1,1024)
-#Capturando erros se necessaio
+# Using the range function to specify ports (here it will scans all ports between 1 and 1024)
+
+# We also put in some error handling for catching errors
 
 try:
-    for port in range(1,1024):
-        sock = socket.socket(socket.AF_INET, socket.SOCK.STREAM)
-        result = sock.connect_ex((remoteServerIP,port))
+    for port in range(1,1025):  
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = sock.connect_ex((remoteServerIP, port))
         if result == 0:
-            print "Port {}: Open".format(port)
-        sock.close
+            print "Port {}: 	 Open".format(port)
+        sock.close()
 
 except KeyboardInterrupt:
-    print "Voce apertou Ctrl + C"
+    print "You pressed Ctrl+C"
     sys.exit()
 
 except socket.gaierror:
-    print "Hostname não esta comunicando. Saindo..."
+    print 'Hostname could not be resolved. Exiting'
     sys.exit()
 
-except socket.erro:
-    print "Não foi possivel fazer conexão com o servidor..."
+except socket.error:
+    print "Couldn't connect to server"
     sys.exit()
 
-#Calculando a diferença de tempo. Para ver quanto tempo demorou para executar o script
-total = t2-t1
+# Checking the time again
+t2 = datetime.now()
 
-#Mostrando as informações na tela
-print "Scanning completa: ", total
-    
+# Calculates the difference of time, to see how long it took to run the script
+total =  t2 - t1
+
+# Printing the information to screen
+print 'Scanning Completed in: ', total
